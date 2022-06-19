@@ -78,8 +78,8 @@ def create_user(korisnik: KorisnikIn, db: Session = Depends(get_db)):
 def get_korisnik_lijekovi(id_korisnik:int, db:Session = Depends(get_db)):
     try:
         lijekovi = db.query(PacijentLijek).filter(PacijentLijek.idPacijent == id_korisnik).all()
-        
-        print(lijekovi)
+        for pl in lijekovi:
+            pl.lijek.daniUzimanja = pl.lijek.daniUzimanja.split(";")
         return lijekovi
 
     except NoResultFound:

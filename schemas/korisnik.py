@@ -1,7 +1,4 @@
-from typing import List
 from pydantic import BaseModel
-
-from schemas.obavijest_lijek import ObavijestLijekOut
 
 class KorisnikBase(BaseModel):
     ime:str

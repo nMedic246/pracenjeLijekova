@@ -1,7 +1,4 @@
-import re
-from turtle import back
-from xmlrpc.client import Boolean
-from sqlalchemy import Column, ForeignKey, Integer, String,Boolean
+from sqlalchemy import Column, ForeignKey, Integer
 from sqlalchemy.orm import relationship
 from database import Base
 

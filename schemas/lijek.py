@@ -1,8 +1,5 @@
-from lib2to3.pgen2.token import OP
 from typing import List, Optional
 from pydantic import BaseModel
-
-from database import Base
 
 
 class LijekBase(BaseModel):
