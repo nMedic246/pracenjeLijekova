@@ -12,5 +12,5 @@ class Lijek(Base):
     trajanjeTerapije  = Column(Integer)
     daniUzimanja = Column(String)
 
-    obavijesti = relationship("ObavijestLijek",back_populates="lijek")
-    pacijentLijekovi = relationship("PacijentLijek",back_populates="lijek")
+    obavijesti = relationship("ObavijestLijek",back_populates="lijek",cascade="all,delete")
+    pacijentLijekovi = relationship("PacijentLijek",back_populates="lijek",cascade="all,delete")

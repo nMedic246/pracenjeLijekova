@@ -1,3 +1,4 @@
+from typing import Optional
 from pydantic import BaseModel
 
 from schemas.lijek import LijekOut
@@ -14,5 +15,10 @@ class ObavijestLijekBase(BaseModel):
         orm_mode = True
 
 class ObavijestLijekOut(ObavijestLijekBase):
+    idObavijest:int
     lijek: LijekOut
     
+class ObavijestUpdate(BaseModel):
+    vrijemeObavijesti : Optional[str]
+    kolicina: Optional[str]
+    uzetLijek: Optional[bool]

@@ -14,7 +14,7 @@ class Korisnik(Base):
     lozinka = Column(String)
     uloga = Column(String)
 
-    obavijesti = relationship("ObavijestLijek",back_populates="korisnik")
-    pacijentLijekovi = relationship("PacijentLijek",back_populates="pacijent")
-    bolesnici = relationship("OdgovornaOsoba",back_populates="korisnik",foreign_keys=[OdgovornaOsoba.idBolesnik])
-    odgOsoba = relationship("OdgovornaOsoba",back_populates="odgovornaOsoba",uselist = False,foreign_keys=[OdgovornaOsoba.idOdgovornaOsoba])
+    obavijesti = relationship("ObavijestLijek",back_populates="korisnik",cascade="all,delete")
+    pacijentLijekovi = relationship("PacijentLijek",back_populates="pacijent",cascade="all,delete")
+    bolesnici = relationship("OdgovornaOsoba",back_populates="korisnik",foreign_keys=[OdgovornaOsoba.idBolesnik],cascade="all,delete")
+    odgOsoba = relationship("OdgovornaOsoba",back_populates="odgovornaOsoba",uselist = False,foreign_keys=[OdgovornaOsoba.idOdgovornaOsoba],cascade="all,delete")

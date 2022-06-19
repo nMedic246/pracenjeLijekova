@@ -13,6 +13,7 @@ class LijekBase(BaseModel):
 
 class LijekOut(BaseModel):
     idLijek:int
+    naziv:str
     pocetniDatum:str
     trajanjeTerapije:int
     daniUzimanja:List[str]

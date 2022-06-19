@@ -7,8 +7,8 @@ class ObavijestLijek(Base):
     __tablename__ = "ObavijestLijek"
 
     idObavijest = Column(Integer, primary_key=True, index=True)
-    idKorisnik = Column(Integer, ForeignKey("Korisnik.idKorisnik"))
-    idLijek = Column(Integer, ForeignKey("Lijek.idLijek"))
+    idKorisnik = Column(Integer, ForeignKey("Korisnik.idKorisnik",ondelete='CASCADE'))
+    idLijek = Column(Integer, ForeignKey("Lijek.idLijek",ondelete='CASCADE'))
     vrijemeObavijesti = Column(String)
     kolicina = Column(String)
     uzetLijek = Column(Boolean)

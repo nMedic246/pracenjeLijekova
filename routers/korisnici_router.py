@@ -3,13 +3,14 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from database import get_db
 from models.korisnik import Korisnik
-
+from models.lijek import Lijek
 from passlib.context import CryptContext
 from sqlalchemy.exc import NoResultFound
 
 from sqlalchemy.exc import IntegrityError
 from models.pacijent_lijek import PacijentLijek
-from schemas.korisnik import KorisnikIn, KorisnikLogin, KorisnikOut
+from schemas.korisnik import KorisnikIn, KorisnikLogin, KorisnikOut, KorisnikNoviLijek
+from schemas.lijek import LijekOut
 from schemas.pacijent_lijek import PacijentLijekOut
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -63,7 +64,6 @@ def create_user(korisnik: KorisnikIn, db: Session = Depends(get_db)):
     """
 
     try:
-        print(korisnik)
         user_db = Korisnik(**korisnik.dict())
         user_db.lozinka = pwd_context.hash(user_db.lozinka)
         db.add(user_db)
@@ -87,6 +87,16 @@ def get_korisnik_lijekovi(id_korisnik:int, db:Session = Depends(get_db)):
             status_code=status.HTTP_404_NOT_FOUND, detail="Korisnik with the given id does not exist."
         )
 
+@router.get("/pacijenti", response_model= List[KorisnikOut])
+def get_svi_pacijenti(db:Session = Depends(get_db)):
+    try:
+        pacijenti = db.query(Korisnik).filter(Korisnik.uloga=="Bolesnik").all()
+        return pacijenti
+    except NoResultFound:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="No pacijenti were found."
+        )
+
 @router.get("/korisnikLijekovi/{id_korisnik}", response_model= List[PacijentLijekOut])
 def get_korisnik_lijekovi(id_korisnik:int, db:Session = Depends(get_db)):
     try:
@@ -100,3 +110,39 @@ def get_korisnik_lijekovi(id_korisnik:int, db:Session = Depends(get_db)):
             status_code=status.HTTP_404_NOT_FOUND, detail="Korisnik with the given id does not exist."
         )
 
+@router.post("/dodajLijek",response_model = LijekOut)
+def dodaj_novi_lijek(lijek_korisnik: KorisnikNoviLijek,db:Session = Depends(get_db)):
+    try:
+        lijek = db.query(Lijek).filter(Lijek.naziv == lijek_korisnik.nazivLijek).one()
+        korisnik = db.query(Korisnik).filter(Korisnik.korisnickoIme == lijek_korisnik.korisnickoIme).one()
+
+        noviLijek = {}
+        noviLijek['idLijek'] = lijek.idLijek
+        noviLijek['idPacijent'] = korisnik.idKorisnik
+        noviLijek_db = PacijentLijek(**noviLijek)
+        db.add(noviLijek_db)
+        db.commit()
+    
+        lijek.daniUzimanja = lijek.daniUzimanja.split(";")
+        return lijek
+    except:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Lijek or korisnik does not exist."
+        )
+
+@router.delete("/ukloniLijek",response_model = LijekOut)
+def ukloni_lijek(lijek_korisnik: KorisnikNoviLijek,db:Session = Depends(get_db)):
+    try:
+        lijek = db.query(Lijek).filter(Lijek.naziv == lijek_korisnik.nazivLijek).one()
+        korisnik = db.query(Korisnik).filter(Korisnik.korisnickoIme == lijek_korisnik.korisnickoIme).one()
+
+        pacijentLijek = db.query(PacijentLijek).filter(PacijentLijek.idLijek == lijek.idLijek).filter(PacijentLijek.idPacijent == korisnik.idKorisnik).first()
+        db.delete(pacijentLijek)
+        db.commit()
+
+        lijek.daniUzimanja = lijek.daniUzimanja.split(";")
+        return lijek
+    except:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Lijek or korisnik does not exist."
+        )

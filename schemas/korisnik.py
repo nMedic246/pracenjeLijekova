@@ -1,3 +1,4 @@
+from lib2to3.pytree import Base
 from pydantic import BaseModel
 
 class KorisnikBase(BaseModel):
@@ -20,3 +21,10 @@ class KorisnikLogin(BaseModel):
     lozinka:str
     class Config:
         orm_mode=True
+
+class KorisnikNoviLijek(BaseModel):
+    korisnickoIme:str
+    nazivLijek:str
+
+    class Cofig:
+        orm_mode = True
