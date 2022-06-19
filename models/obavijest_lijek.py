@@ -10,6 +10,7 @@ class ObavijestLijek(Base):
     idKorisnik = Column(Integer, ForeignKey("Korisnik.idKorisnik",ondelete='CASCADE'))
     idLijek = Column(Integer, ForeignKey("Lijek.idLijek",ondelete='CASCADE'))
     vrijemeObavijesti = Column(String)
+    datumObavijesti = Column(String)
     kolicina = Column(String)
     uzetLijek = Column(Boolean)
 
