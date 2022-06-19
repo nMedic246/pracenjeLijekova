@@ -14,6 +14,8 @@ if ENV == 'dev':
     DATABASE_URL = os.getenv('DATABASE_URL')
 else:
     DATABASE_URL = os.environ['DATABASE_URL']
+    DATABASE_URL.replace("postgres://", "postgresql://")
+
 
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
