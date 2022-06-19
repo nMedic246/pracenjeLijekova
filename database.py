@@ -14,7 +14,8 @@ if ENV == 'dev':
     DATABASE_URL = os.getenv('DATABASE_URL')
 else:
     DATABASE_URL = os.environ['DATABASE_URL']
-    DATABASE_URL.replace("postgres://", "postgresql://")
+    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+    print(DATABASE_URL)
 
 
 engine = create_engine(DATABASE_URL)
