@@ -41,7 +41,10 @@ def dodaj_novu_obavijest(obavijest:ObavijestLijekBase, db:Session = Depends(get_
         noviLijek['idLijek'] = obavijest.idLijek
         noviLijek['idPacijent'] = obavijest.idKorisnik
         noviLijek_db = PacijentLijek(**noviLijek)
-        db.add(noviLijek_db)
+        
+        pacijentLijek = db.query(PacijentLijek).filter(PacijentLijek.idLijek==obavijest.idLijek).filter(PacijentLijek.idPacijent==obavijest.idKorisnik).first()
+        if pacijentLijek is None:
+            db.add(noviLijek_db)
         
         obavijest_db = ObavijestLijek(**obavijest.dict())
         db.add(obavijest_db)
