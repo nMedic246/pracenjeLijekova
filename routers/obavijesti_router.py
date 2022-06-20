@@ -7,6 +7,7 @@ from models.lijek import Lijek
 from models.obavijest_lijek import ObavijestLijek
 from models.odgovorna_osoba import OdgovornaOsoba
 from sqlalchemy.exc import IntegrityError, NoResultFound
+from models.pacijent_lijek import PacijentLijek
 
 
 from schemas.obavijest_lijek import ObavijestLijekBase, ObavijestLijekOut, ObavijestUpdate
@@ -36,6 +37,12 @@ def dodaj_novu_obavijest(obavijest:ObavijestLijekBase, db:Session = Depends(get_
         db.query(Korisnik).filter(Korisnik.idKorisnik == obavijest.idKorisnik).one()
         db.query(Lijek).filter(Lijek.idLijek == obavijest.idLijek).one()
 
+        noviLijek = {}
+        noviLijek['idLijek'] = obavijest.idLijek
+        noviLijek['idPacijent'] = obavijest.idKorisnik
+        noviLijek_db = PacijentLijek(**noviLijek)
+        db.add(noviLijek_db)
+        
         obavijest_db = ObavijestLijek(**obavijest.dict())
         db.add(obavijest_db)
         db.commit()
