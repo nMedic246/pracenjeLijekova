@@ -5,6 +5,7 @@ from schemas.lijek import LijekOut
 
 
 class ObavijestLijekBase(BaseModel):
+    idObavijest: int
     idKorisnik:int
     idLijek:int
     vrijemeObavijesti:str
@@ -16,7 +17,6 @@ class ObavijestLijekBase(BaseModel):
         orm_mode = True
 
 class ObavijestLijekOut(ObavijestLijekBase):
-    idObavijest:int
     lijek: LijekOut
     
 class ObavijestUpdate(BaseModel):
